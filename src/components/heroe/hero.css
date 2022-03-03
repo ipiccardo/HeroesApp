@@ -1,0 +1,5 @@
+@media (max-width: 771px) {
+  .displayBlock {
+    display: block !important;
+  }
+}
