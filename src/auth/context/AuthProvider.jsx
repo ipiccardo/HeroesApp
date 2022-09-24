@@ -4,31 +4,64 @@ import { AuthReducer } from "./AuthReducer";
 import { useReducer } from "react";
 import { types } from "../types/types";
 
-
-
 const initialState = {
   logged: false,
 };
 
-export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AuthReducer, initialState);
+const init = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const onLogin = async(name = '') => { 
+  return {
+    logged: !!user,
+    user: user,
+  };
+};
+
+export const AuthProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(AuthReducer, initialState, init);
+
+  const onLogin = async (name = "") => {
+    const user = {
+      id: "ABC",
+      name,
+    };
     const action = {
       type: types.login,
-      payload: {
-        id: 'ABC',
-        name: name
-      }
-    }
-    
+      payload: user,
+    };
+    localStorage.setItem("user", JSON.stringify(user));
     dispatch(action);
-  }
+  };
+
+const onLogout = async (name = '') => {
+
+  const user = {
+    id: "ABC",
+    name,
+  };
+
+  const action = {
+    type: types.logout,
+    payload: user,
+  };
+  localStorage.removeItem('user')
+  dispatch(action)
+}
 
 
 
-  return <AuthContext.Provider value={{
-    ...state,
-    onLogin: onLogin
-  }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        // PROPS
+        ...state,
+
+        //METHODS
+        onLogin: onLogin,
+        onLogout: onLogout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
