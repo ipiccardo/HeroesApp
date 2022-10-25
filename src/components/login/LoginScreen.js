@@ -11,10 +11,13 @@ const LoginScreen = () => {
 
   const handleLogin = () => {
 
+    const lastPath = localStorage.getItem('lastPath') || '/'
+
+
     onLogin('Iván Piccardo')
 
 
-    navigate("/", {
+    navigate(lastPath, {
       replace: true,
     });
   };
